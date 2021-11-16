@@ -15,13 +15,13 @@
     "node": ">=14"
   },
   "dependencies": {
-    "@k03mad/utils": "19.2.8",
+    "@k03mad/utils": "19.2.11",
     "chalk": "4.1.2",
     "command-line-args": "5.2.0",
     "command-line-usage": "6.1.1",
     "ms": "2.1.3",
     "my-local-ip-is": "1.0.7",
-    "oui": "11.0.91",
+    "oui": "11.0.92",
     "p-timeout": "4.1.0",
     "update-notifier": "5.1.0",
     "xml-js": "1.6.11"
