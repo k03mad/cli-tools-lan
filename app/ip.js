@@ -33,7 +33,7 @@ if (args.help) {
 
     await Promise.all(data.map(async elem => {
         try {
-            let {body} = await request.got(elem.request);
+            let {body} = await request.cache(elem.request);
 
             // if service use xml — convert to json
             if (elem.xmlPath) {

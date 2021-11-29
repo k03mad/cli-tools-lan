@@ -6,11 +6,6 @@ module.exports = [
         removeKeys: ['remote_host', 'method'],
     },
     {
-        currentIp: 'https://extreme-ip-lookup.com/json/',
-        queryIp: ip => `https://extreme-ip-lookup.com/json/${ip}`,
-        removeKeys: ['status', 'lat', 'lon', 'countryCode', 'ipType'],
-    },
-    {
         currentIp: 'https://ipinfo.io',
         queryIp: ip => `https://ipinfo.io/${ip}`,
         removeKeys: ['readme', 'loc'],
