@@ -2,7 +2,7 @@
 
 const commandLineArgs = require('command-line-args');
 const commandLineUsage = require('command-line-usage');
-const {gray} = require('chalk');
+const {gray} = require('colorette');
 
 const args = [
     {

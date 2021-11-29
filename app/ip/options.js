@@ -1,6 +1,6 @@
 'use strict';
 
-const {blue, cyan, yellow, red, gray} = require('chalk');
+const {blue, cyan, yellow, red, gray} = require('colorette');
 
 module.exports = {
     /* eslint-disable jsdoc/require-jsdoc */
