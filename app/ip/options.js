@@ -1,17 +1,16 @@
-'use strict';
+import chalk from 'chalk';
 
-const {blue, cyan, yellow, red, gray} = require('colorette');
+const {blue, cyan, gray, red, yellow} = chalk;
 
-module.exports = {
-    /* eslint-disable jsdoc/require-jsdoc */
-
+export default {
     addIndent: message => gray('⎣ ') + message,
 
-    numbersRegExp: /^[\d ,.-]+$/i,
+    isNumber: string => /^[\d.]+$/i.test(string),
 
-    numbersColor: cyan,
-    othersColor: yellow,
-
-    urlColor: blue,
-    errColor: red,
+    colors: {
+        number: cyan,
+        string: yellow,
+        url: blue,
+        err: red,
+    },
 };

@@ -1,29 +1,25 @@
-'use strict';
+import commandLineArgs from 'command-line-args';
+import commandLineUsage from 'command-line-usage';
 
-const commandLineArgs = require('command-line-args');
-const commandLineUsage = require('command-line-usage');
-const {gray} = require('colorette');
-
-const args = [
+const optionList = [
     {
-        description: `get geoip info ${gray('(default: current ip)')}`,
         name: 'ip',
+        description: '',
         alias: 'i',
     },
     {
-        description: 'print this help',
+        name: 'domain',
+        description: '',
+        alias: 'd',
+    },
+    {
         name: 'help',
         alias: 'h',
         type: Boolean,
     },
 ];
 
-module.exports = {
-    args: commandLineArgs(args),
-    help: commandLineUsage([
-        {
-            header: 'Options',
-            optionList: args,
-        },
-    ]),
+export default {
+    args: commandLineArgs(optionList),
+    help: commandLineUsage([{optionList, hide: 'help'}]),
 };

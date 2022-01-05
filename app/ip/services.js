@@ -1,19 +1,17 @@
-'use strict';
-
-module.exports = [
+export default [
     {
-        currentIp: 'https://ifconfig.me/all.json',
-        removeKeys: ['remote_host', 'method'],
+        default: 'https://ifconfig.me/all.json',
+        remove: ['remote_host', 'method'],
     },
     {
-        currentIp: 'https://ipinfo.io',
-        queryIp: ip => `https://ipinfo.io/${ip}`,
-        removeKeys: ['readme', 'loc'],
+        default: 'https://ipinfo.io',
+        query: ip => `https://ipinfo.io/${ip}`,
+        remove: ['readme', 'loc'],
     },
     {
-        currentIp: 'http://api.geoiplookup.net/',
-        queryIp: ip => `http://api.geoiplookup.net/?query=${ip}`,
-        removeKeys: ['latitude', 'longitude', 'countrycode'],
+        default: 'http://api.geoiplookup.net/',
+        query: ip => `http://api.geoiplookup.net/?query=${ip}`,
+        remove: ['latitude', 'longitude'],
         xmlPath: 'ip.results.result',
     },
 ];

@@ -1,88 +1,82 @@
 #!/usr/bin/env node
 
-'use strict';
+import {request} from '@k03mad/util';
+import _ from 'lodash';
+import convert from 'xml-js';
 
-const convert = require('xml-js');
-const options = require('./ip/options');
-const services = require('./ip/services');
-const {args, help} = require('./ip/cli');
-const {request, object} = require('@k03mad/utils');
+import cli from './ip/cli.js';
+import options from './ip/options.js';
+import services from './ip/services.js';
 
-require('../updater');
-
-if (args.help) {
-    console.log(help);
+if (cli.args.help) {
+    console.log(cli.help);
     process.exit(0);
 }
 
 (async () => {
     const errors = [];
 
-    // filter services without query if ip not entered
-    const data = args.ip
-        ? services
-            .filter(elem => elem.queryIp)
-            .map(elem => {
-                elem.request = elem.queryIp(args.ip);
-                return elem;
-            })
-        : services.map(elem => {
-            elem.request = elem.currentIp;
-            return elem;
-        });
+    if (cli.args.domain) {
+        const domainWithProtocol = cli.args.domain.replace(/^(https?:\/\/)?/, 'https://');
 
-    await Promise.all(data.map(async elem => {
         try {
-            let {body} = await request.cache(elem.request);
+            const {ip} = await request.got(domainWithProtocol);
+            cli.args.ip = ip;
+        } catch (err) {
+            console.error(['', options.colors.url(domainWithProtocol), options.colors.err(err)].join('\n'));
+            process.exit(1);
+        }
+    }
 
-            // if service use xml — convert to json
+    await Promise.all(services.map(async elem => {
+        let geoIpUrl = elem.default;
+
+        try {
+            if (cli.args.ip) {
+                if (elem.query) {
+                    geoIpUrl = elem.query(cli.args.ip);
+                } else {
+                    return;
+                }
+            }
+
+            let {body} = await request.cache(geoIpUrl);
+
             if (elem.xmlPath) {
-                body = Object.fromEntries(Object
-                    .entries(object.path(convert.xml2js(body, {compact: true}), elem.xmlPath))
-                    // eslint-disable-next-line no-underscore-dangle
-                    .map(([key, value]) => [key, value._text]),
+                body = Object.fromEntries(
+                    Object
+                        .entries(_.get(convert.xml2js(body, {compact: true}), elem.xmlPath))
+                        // eslint-disable-next-line no-underscore-dangle
+                        .map(([key, value]) => [key, value._text]),
                 );
             }
 
-            const output = [{value: options.urlColor(elem.request)}];
+            const output = [];
+            const values = [];
 
-            for (let [key, value] of Object.entries(body)) {
-                if (value) {
-                    if (elem.removeKeys && elem.removeKeys.includes(key)) {
-                        continue;
-                    }
+            Object.entries(body).forEach(([key, value]) => {
+                if (
+                    value
+                    && !elem.remove?.includes(key)
+                    && !values.includes(value)
+                ) {
+                    const color = options.isNumber(value)
+                        ? options.colors.number
+                        : options.colors.string;
 
-                    value = String(value);
-
-                    // filter duplicated values
-                    if (output.filter(
-                        field => field.value.toLowerCase() === value.toLowerCase(),
-                    ).length === 0) {
-                        output.push({key, value});
-                    }
+                    values.push(value);
+                    output.push(options.addIndent(`${key}: ${color(value)}`));
                 }
-            }
-
-            const printData = output.map(({key, value}) => {
-                const valueColor = options.numbersRegExp.test(value)
-                    ? options.numbersColor
-                    : options.othersColor;
-
-                if (key) {
-                    return options.addIndent(`${key}: ${valueColor(value)}`);
-                }
-
-                return valueColor(value);
             });
 
-            console.log(`${printData.join('\n')}\n`);
+            console.log(['', options.colors.url(geoIpUrl), ...output].join('\n'));
         } catch (err) {
-            errors.push(`${options.urlColor(elem.request)} ${options.errColor(err)}`);
+            errors.push('', options.colors.url(geoIpUrl), options.colors.err(err));
         }
     }));
 
     if (errors.length > 0) {
-        console.error(errors.join('\n\n'));
+        console.error(errors.join('\n'));
         process.exit(1);
     }
 })();
