@@ -17,13 +17,19 @@ if (cli.args.help) {
     const errors = [];
 
     if (cli.args.domain) {
-        const domainWithProtocol = cli.args.domain.replace(/^(https?:\/\/)?/, 'https://');
+        const domainWithProtocol = cli.args.domain
+            .replace(/^(https?:\/\/)?/, 'https://');
 
         try {
             const {ip} = await request.got(domainWithProtocol);
             cli.args.ip = ip;
         } catch (err) {
-            console.error(['', options.colors.url(domainWithProtocol), options.colors.err(err)].join('\n'));
+            console.error([
+                '',
+                options.colors.url(domainWithProtocol),
+                options.colors.err(err),
+            ].join('\n'));
+
             process.exit(1);
         }
     }
@@ -45,7 +51,10 @@ if (cli.args.help) {
             if (elem.xmlPath) {
                 body = Object.fromEntries(
                     Object
-                        .entries(_.get(convert.xml2js(body, {compact: true}), elem.xmlPath))
+                        .entries(_.get(
+                            convert.xml2js(body, {compact: true}),
+                            elem.xmlPath,
+                        ))
                         // eslint-disable-next-line no-underscore-dangle
                         .map(([key, value]) => [key, value._text]),
                 );
@@ -55,11 +64,7 @@ if (cli.args.help) {
             const values = [];
 
             Object.entries(body).forEach(([key, value]) => {
-                if (
-                    value
-                    && !elem.remove?.includes(key)
-                    && !values.includes(value)
-                ) {
+                if (value && !values.includes(value)) {
                     const color = options.isNumber(value)
                         ? options.colors.number
                         : options.colors.string;
