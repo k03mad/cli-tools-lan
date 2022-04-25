@@ -15,18 +15,18 @@
     "node": ">=14"
   },
   "dependencies": {
-    "@k03mad/util": "4.8.1",
+    "@k03mad/util": "5.2.0",
     "chalk": "5.0.1",
     "command-line-args": "5.2.1",
-    "command-line-usage": "6.1.2",
+    "command-line-usage": "6.1.3",
     "lodash": "4.17.21",
     "xml-js": "1.6.11"
   },
   "devDependencies": {
-    "@k03mad/eslint-config": "11.0.2",
-    "eslint": "8.12.0",
-    "eslint-plugin-import": "2.25.4",
-    "eslint-plugin-jsdoc": "38.1.4",
+    "@k03mad/eslint-config": "11.0.3",
+    "eslint": "8.14.0",
+    "eslint-plugin-import": "2.26.0",
+    "eslint-plugin-jsdoc": "39.2.8",
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-simple-import-sort": "7.0.0",
     "eslint-plugin-sort-destructure-keys": "1.4.0",
@@ -34,7 +34,7 @@
     "husky": "7.0.4"
   },
   "scripts": {
-    "lint": "eslint ./ --report-unused-disable-directives --ignore-pattern='!.*'",
+    "lint": "eslint ./ --report-unused-disable-directives",
     "setup": "npm i",
     "prepare": "husky install"
   }
