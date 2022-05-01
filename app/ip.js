@@ -8,8 +8,13 @@ import cli from './ip/cli.js';
 import options from './ip/options.js';
 import services from './ip/services.js';
 
+const log = (msg, type = 'log') => {
+    // eslint-disable-next-line no-console
+    console[type](msg);
+};
+
 if (cli.args.help) {
-    console.log(cli.help);
+    log(cli.help);
     process.exit(0);
 }
 
@@ -24,11 +29,11 @@ if (cli.args.help) {
             const {ip} = await request.got(domainWithProtocol);
             cli.args.ip = ip;
         } catch (err) {
-            console.error([
+            log([
                 '',
                 options.colors.url(domainWithProtocol),
                 options.colors.err(err),
-            ].join('\n'));
+            ].join('\n'), 'error');
 
             process.exit(1);
         }
@@ -74,14 +79,14 @@ if (cli.args.help) {
                 }
             });
 
-            console.log(['', options.colors.url(geoIpUrl), ...output].join('\n'));
+            log(['', options.colors.url(geoIpUrl), ...output].join('\n'));
         } catch (err) {
             errors.push('', options.colors.url(geoIpUrl), options.colors.err(err));
         }
     }));
 
     if (errors.length > 0) {
-        console.error(errors.join('\n'));
+        log(errors.join('\n'), 'error');
         process.exit(1);
     }
 })();
