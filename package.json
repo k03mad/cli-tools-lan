@@ -15,7 +15,7 @@
     "node": ">=14"
   },
   "dependencies": {
-    "@k03mad/util": "10.0.1",
+    "@k03mad/util": "10.0.2",
     "chalk": "5.0.1",
     "command-line-args": "5.2.1",
     "command-line-usage": "6.1.3",
